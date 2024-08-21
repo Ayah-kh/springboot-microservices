@@ -47,6 +47,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 //    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
     @Override
     public APIResponseDto getEmployeeById(Long employeeId) {
+
+        LOGGER.info("inside getEmployeeById() method");
         Employee employee = employeeRepository.findById(employeeId).get();
 
 //        ResponseEntity<DepartmentDto> response = restTemplate.getForEntity("http://localhost:8080/api/departments/" + employee.getDepartmentCode(),
@@ -76,6 +78,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public APIResponseDto getDefaultDepartment(Long employeeId, Exception exception) {
+        LOGGER.info("inside getDefaultDepartment() method");
         Employee employee = employeeRepository.findById(employeeId).get();
 
         DepartmentDto departmentDto = new DepartmentDto();
