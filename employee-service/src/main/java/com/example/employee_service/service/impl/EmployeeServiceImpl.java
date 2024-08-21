@@ -9,6 +9,7 @@ import com.example.employee_service.repo.EmployeeRepository;
 import com.example.employee_service.service.ApiClient;
 import com.example.employee_service.service.EmployeeService;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return savedEmployeeDto;
     }
 
-    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+    @Retry(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
+//    @CircuitBreaker(name = "${spring.application.name}", fallbackMethod = "getDefaultDepartment")
     @Override
     public APIResponseDto getEmployeeById(Long employeeId) {
         Employee employee = employeeRepository.findById(employeeId).get();
@@ -73,7 +75,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         return apiResponseDto;
     }
 
-    public APIResponseDto getDefaultDepartment(Long employeeId) {
+    public APIResponseDto getDefaultDepartment(Long employeeId, Exception exception) {
         Employee employee = employeeRepository.findById(employeeId).get();
 
         DepartmentDto departmentDto = new DepartmentDto();
